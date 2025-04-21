@@ -96,7 +96,7 @@ footer {
  </style>
 <footer class="footer">
     <div class="footer-container">
-      <!-- About Section -->
+      <
       <div class="footer-column">
         <h2>LOOMify</h2>
         <p>Showcasing the beauty of handcrafted items made with love and expertise by artisans around the world.</p>
@@ -113,7 +113,7 @@ footer {
         <ul>
           <li><a href="#">Home</a></li>
           <li><a href="#main">Shop</a></li>
-          <li><a href="#">About Us</a></li>
+          <li><a href="aboutus.html">About Us</a></li>
           <li><a href="contact.php">Contact</a></li>
           <li><a href="#">FAQs</a></li>
         </ul>

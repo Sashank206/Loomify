@@ -16,6 +16,20 @@ if (!empty($search_query)) {
 $products = $conn->query($sql); 
 ?>
 
+<?php
+
+$sessionTimeout = 30 * 60; 
+
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sessionTimeout)) {
+  
+  session_unset();
+  session_destroy();
+  session_start(); 
+}
+
+
+$_SESSION['LAST_ACTIVITY'] = time();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -254,7 +268,7 @@ nav a:hover {
     <a href="#">Home</a>
     <a href="#main">Shop</a>
     <a href="productCategory.php">Categories</a>
-    <a href="#">About</a>
+    <a href="aboutus.html">About</a>
     <a href="contact.php">Contact</a>
 
   <div class="search-bar">
