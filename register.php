@@ -115,11 +115,11 @@ input{
     <input type="text" id="address" name="address" >
     <span class="error" id="passworderror"></span>
     <button class="submit" type="submit">SIGN UP</button>
+        <div class="last">
+            <h4>By signing up, you agree to our <a href="term.html">Terms and Conditions</a>.</h4><br>
+            <button type="reset">reset</button>
+        </div>
     </form>
-    <div class="last">
-        <h4>By signing up, you agree to our <a href="term.html">Terms and Conditions</a>.</h4>
-        <button type="reset">reset</h1>
-    </div>
     </div>
 
 

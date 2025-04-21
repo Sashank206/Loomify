@@ -314,8 +314,8 @@ nav a:hover {
                 <a href="profile.php">Profile</a>
                 <a href="logout.php">Logout</a>
             <?php else: ?>
-                <a href="login.php">Login</a>
-                <a href="register.php">Register</a>
+              <a href="register.php">Sign Up</a>
+                <a href="login.php">Sign In</a>
                 <a href="admin/AdminLogin.php">Admin</a>
             <?php endif; ?>
         </div>
