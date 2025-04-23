@@ -94,9 +94,9 @@ button:hover{
         }
     </script>
     <div class="login" method="POST" id="myform">
-        <!-- logo pic -->
+        
         <img src="src/logo.png" alt="logo png" class="logo"> 
-        <!-- n -->
+       
         <h2>Come On, In </h2> 
         <form action="#" method="POST">
             <label for="email">Email or Phone number</label>
@@ -175,21 +175,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $error_message = "No account found with that username, email, or phone.";
             }
         } else {
-            // Admin login logic
+            
             $admin = $admin_result->fetch_assoc();
 
-            // Check admin password (replace with password_verify if using hashed passwords)
+            
             if (password_verify($password, $admin['password'])) {
-                // Admin login successful
+                
                 session_regenerate_id(true);
                 $_SESSION['admin_id'] = $admin['admin_id'];
                 $_SESSION['username'] = $admin['username'];
                 $_SESSION['user_type'] = $admin['user_type'];
 
-                // Log successful admin login
+                
                 error_log("Admin {$login_input} logged in successfully at " . date('Y-m-d H:i:s'));
 
-                // Redirect to admin dashboard
+                
                 header("Location: admin/index.php");
                 exit();
             } else {
