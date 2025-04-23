@@ -439,13 +439,26 @@ nav a:hover {
             </p>
             <p class="price">₨ <?php echo number_format($product['price'], 2); ?></p>
 
-            <form action="cart.php" method="POST" onsubmit="alert('Product added to cart!');">
+            <form action="cart.php" method="POST" onsubmit="return handleAddToCart(event, <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>);">
               <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
               <input type="hidden" name="available_stock" value="<?php echo $product['stock']; ?>">
               <button type="submit" <?php echo $product['stock'] <= 0 ? 'disabled' : ''; ?>>
               <?php echo $product['stock'] <= 0 ? 'Out of Stock' : 'Add to Cart'; ?>
               </button>
             </form>
+
+      <script>
+        function handleAddToCart(event, isLoggedIn) {
+        if (!isLoggedIn) {
+          event.preventDefault();
+          alert('You need to log in to add products to the cart.');
+          window.location.href = 'login.php';
+          return false;
+        } else {
+          alert('Product added to cart!');
+        }
+        }
+      </script>
           </div>
         <?php endwhile; ?>
       <?php else: ?>
