@@ -111,9 +111,9 @@ input{
 
     <label for ="password">Password</label>
     <input type="password" id="password" name="password" >
+    <span class="error" id="passworderror"></span>
     <label for ="address">Address</label>
     <input type="text" id="address" name="address" >
-    <span class="error" id="passworderror"></span>
     <button class="submit" type="submit">SIGN UP</button>
         <div class="last">
             <h4>By signing up, you agree to our <a href="term.html">Terms and Conditions</a>.</h4><br>
@@ -133,6 +133,9 @@ input{
         const name = document.getElementById("name").value.trim();
         if (name === "") {
         document.getElementById("nameerror").textContent = "Name is required.";
+        isValid = false;
+        } else if (name.length < 3 || name.length > 10) {
+        document.getElementById("nameerror").textContent = "Name must be between 3 and 10 characters.";
         isValid = false;
         } else {
         document.getElementById("nameerror").textContent = "";
