@@ -74,13 +74,7 @@
     <?php
     if (isset($_POST['submit'])) {
         // Database connection
-        $conn = new mysqli('localhost', 'root', '', 'handcraft');
-
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
+        include 'db.php'; 
         // Sanitize and insert data
         $name = $conn->real_escape_string($_POST['name']);
         $email = $conn->real_escape_string($_POST['email']);
