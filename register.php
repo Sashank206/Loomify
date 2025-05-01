@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,37 +94,105 @@ input{
     font-size: 15px;  
     
     }
+
+.role-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.role-btn {
+    padding: 10px 30px;
+    margin: 0 10px;
+    border: 2px solid black;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: white;
+    color: black;
+    transition: all 0.3s ease;
+}
+
+.role-btn.active {
+    background-color: black;
+    color: white;
+}
+
 </style>
     <div class="login" method="POST">
     <!-- logo pic -->
     <img src="src/logo.png" alt="logo png" class="logo"> 
     <!-- n -->
     <h2>SIGN UP</h2> 
+
+
     <!-- add home page here -->
-    <form action="" id="myform" method="POST"> 
+    <form action="" id="myform" method="POST">
+    <div class="role-selector">
+        <!-- Displayed radio buttons will now be handled by labels -->
+        <input type="radio" id="buyer" name="role" value="buyer" checked hidden>
+        <input type="radio" id="seller" name="role" value="seller" hidden>
+
+        <label for="buyer" class="role-btn active" id="buyerBtn">Buyer</label>
+        <label for="seller" class="role-btn" id="sellerBtn">Seller</label>
+    </div>
+
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" >
+    <input type="text" id="name" name="name">
     <span class="error" id="nameerror"></span>
 
-    <label for="Phone_number">Phone Number:</label>
-    <input type="number" id="phone_number" name="phone_number" >
+    <label for="phone_number">Phone Number:</label>
+    <input type="number" id="phone_number" name="phone_number">
     <span class="error" id="phone_numbererror"></span>
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" >
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email">
     <span class="error" id="emailerror"></span>
 
-    <label for ="password">Password</label>
-    <input type="password" id="password" name="password" >
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password">
     <span class="error" id="passworderror"></span>
-    <label for ="address">Address</label>
-    <input type="text" id="address" name="address" >
+
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address">
+
     <button class="submit" type="submit">SIGN UP</button>
-        <div class="last">
-            <h4>By signing up, you agree to our <a href="term.html">Terms and Conditions</a>.</h4><br>
-            <button type="reset">reset</button>
-        </div>
-    </form>
+    
+    <div class="last">
+        <h4>By signing up, you agree to our <a href="term.html">Terms and Conditions</a>.</h4><br>
+        <button type="reset">Reset</button>
+    </div>
+</form>
+
+<script>
+    // JavaScript to toggle the active class and select the corresponding radio button
+    const buyerBtn = document.getElementById('buyerBtn');
+    const sellerBtn = document.getElementById('sellerBtn');
+    const buyerRadio = document.getElementById('buyer');
+    const sellerRadio = document.getElementById('seller');
+
+    buyerBtn.addEventListener('click', () => {
+        buyerBtn.classList.add('active');
+        sellerBtn.classList.remove('active');
+        buyerRadio.checked = true;
+    });
+
+    sellerBtn.addEventListener('click', () => {
+        sellerBtn.classList.add('active');
+        buyerBtn.classList.remove('active');
+        sellerRadio.checked = true;
+    });
+
+    // Ensure the form submits the correct role value
+    document.getElementById('myform').addEventListener('submit', (event) => {
+        // Check if a role is selected
+        if (!buyerRadio.checked && !sellerRadio.checked) {
+            event.preventDefault();
+            alert('Please select a role (Buyer or Seller)');
+        }
+    });
+</script>
+
     </div>
 
 
@@ -182,39 +255,36 @@ input{
         event.preventDefault();
         }
     });
-    </script>
-
-    
+</script>
 <?php
-// Database connection
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include 'db.php';
-// Check if form is submitted
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['name']);
     $email = trim($_POST['email']);
-    $phone_number = trim ($_POST['phone_number']);
-    // $password = $_POST['password']; 
+    $phone_number = trim($_POST['phone_number']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $address = trim($_POST['address']);
+    $role = isset($_POST['role']) && $_POST['role'] === 'seller' ? 'seller' : 'buyer';
 
-    // Insert data into the user table
-    $sql = "INSERT INTO users (username, email, phone_number, password,address) VALUES (?, ?, ?, ?,?)";
+    $sql = "INSERT INTO users (username, email, phone_number, password, address, role) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
         die("Error preparing statement: " . $conn->error);
     }
-    $stmt->bind_param("sssss", $username, $email, $phone_number, $password,$address);
+    $stmt->bind_param("ssssss", $username, $email, $phone_number, $password, $address, $role);
 
     if ($stmt->execute()) {
-        echo "<script>alert('signup Successfully!');</script>";
-        echo "<script>window.location.href = 'login.php';</script>"; 
+        echo "<script>alert('Signup Successful!'); window.location.href = 'login.php';</script>";
     } else {
         echo "<script>alert('Number or Email Already Exists.');</script>";
     }
-
     $stmt->close();
 }
-$conn ->close();
+
 ?>
 
 </body>

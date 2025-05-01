@@ -13,10 +13,13 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $product_id = intval($_GET['id']);
 
 // Fetch detailed product information with category
-$query = "SELECT p.*, c.name as category_name 
-          FROM products p 
-          LEFT JOIN categories c ON p.category_id = c.category_id 
+$query = "SELECT p.*, c.name AS category_name, u.username AS seller_name
+          FROM products p
+          LEFT JOIN categories c ON p.category_id = c.category_id
+          LEFT JOIN users u ON p.seller_id = u.user_id
           WHERE p.product_id = ?";
+
+
 
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $product_id);
@@ -217,6 +220,7 @@ $product = $result->fetch_assoc();
                         <?php echo htmlspecialchars($product['category_name'] ?? 'Uncategorized'); ?>
                     </div>
                     <div>
+                    
                         <strong>Stock Status:</strong>
                         <span class="product-details-stock <?php 
                             echo ($product['stock'] <= 0 ? 'out-of-stock' : 
@@ -232,7 +236,10 @@ $product = $result->fetch_assoc();
                             }
                             ?>
                         </span>
+                        
                     </div>
+                    <p><strong>Seller:</strong> <?php echo htmlspecialchars($product['seller_name']); ?></p>
+
                 </div>
 
                 <form action="Cart.php" method="POST" class="cart-form" style="margin-top: 1.5rem;">

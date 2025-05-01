@@ -1,34 +1,32 @@
 <?php 
 session_start(); 
-include 'db.php';  
+include 'db.php';  // adjust path as needed
 
+// Session timeout logic (30 minutes)
+$sessionTimeout = 30 * 60; 
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sessionTimeout)) {
+    session_unset();
+    session_destroy();
+    session_start();
+}
+$_SESSION['LAST_ACTIVITY'] = time();
+
+// Search logic
 $search_query = $_GET['search'] ?? '';
-$sql = "SELECT p.*, c.name as category_name 
+$sql = "SELECT p.*, c.name as category_name, u.username as seller_name
         FROM products p 
         LEFT JOIN categories c ON p.category_id = c.category_id 
+        LEFT JOIN users u ON p.seller_id = u.user_id 
         WHERE p.stock > 0";
 
 if (!empty($search_query)) {
     $search_query_safe = $conn->real_escape_string($search_query);
-    $sql .= " AND (p.name LIKE '%$search_query_safe%' OR p.description LIKE '%$search_query_safe%' OR c.name LIKE '%$search_query_safe%')";
+    $sql .= " AND (p.name LIKE '%$search_query_safe%' 
+              OR p.description LIKE '%$search_query_safe%' 
+              OR c.name LIKE '%$search_query_safe%')";
 }
 
-$products = $conn->query($sql); 
-?>
-
-<?php
-
-$sessionTimeout = 30 * 60; 
-
-if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sessionTimeout)) {
-  
-  session_unset();
-  session_destroy();
-  session_start(); 
-}
-
-
-$_SESSION['LAST_ACTIVITY'] = time();
+$products = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -437,8 +435,10 @@ nav a:hover {
                 else echo "Available: {$product['stock']}";
               ?>
             </p>
+          
+            <p class="seller-name"><strong>Seller:</strong> <?php echo htmlspecialchars($product['seller_name']); ?></p> 
             <p class="price">₨ <?php echo number_format($product['price'], 2); ?></p>
-
+          
             <form action="cart.php" method="POST" onsubmit="return handleAddToCart(event, <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>);">
               <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
               <input type="hidden" name="available_stock" value="<?php echo $product['stock']; ?>">
